@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestium - Text to Animation</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #111111;
+            color: white;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #0a0a0a;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #1e1e1e;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e8fe4e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .beta-badge {
+            background-color: #1a2cb8;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        nav a {
+            color: #737373;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .signup-btn {
+            background-color: #e8fe4e;
+            color: #1a2cb8;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 40px 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #737373;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .highlight {
+            color: #e8fe4e;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background-color: #252527;
+            color: #737373;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .tab-btn:first-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .tab-btn:last-child {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .tab-btn.active {
+            background-color: #1a2cb8;
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: #333333;
+        }
+
+        /* Form */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #252527;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            background-color: #181818;
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: 2px solid #1a2cb8;
+        }
+
+        .submit-btn {
+            background-color: #e8fe4e;
+            color: #1a2cb8;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-btn:disabled {
+            background-color: #737373;
+            cursor: not-allowed;
+            color: #181818;
+        }
+
+        .note {
+            text-align: center;
+            color: #737373;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* Example Prompts */
+        .examples {
+            margin-top: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .examples h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .example-card {
+            background-color: #252527;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .example-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .example-card p {
+            color: #737373;
+            font-size: 14px;
+        }
+
+        /* Animation History */
+        .history-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .history-container h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .animations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .animation-card {
+            background-color: #252527;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .animation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .animation-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.completed { background-color: #4ade80; }
+        .status-dot.queued { background-color: #facc15; }
+        .status-dot.generating { background-color: #3b82f6; }
+        .status-dot.running { background-color: #a855f7; }
+        .status-dot.failed { background-color: #ef4444; }
+
+        .date {
+            font-size: 12px;
+            color: #737373;
+        }
+
+        .animation-body {
+            padding: 15px;
+        }
+
+        .animation-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .animation-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .play-btn {
+            background-color: #1a2cb8;
+            color: white;
+        }
+
+        .download-btn {
+            background-color: #e8fe4e;
+            color: #1a2cb8;
+            font-weight: bold;
+        }
+
+        .status-message {
+            color: #737373;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Empty state */
+        .empty-state {
+            background-color: #252527;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #737373;
+        }
+
+        .empty-state p {
+            color: #737373;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .create-btn {
+            background-color: #1a2cb8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #252527;
+            max-width: 800px;
+            width: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #737373;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: white;
+        }
+
+        .video-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0a;
+            padding: 30px 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .footer-logo {
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-logo-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #e8fe4e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .copyright {
+            color: #737373;
+            font-size: 14px;
+        }
+
+        /* Loader */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e8fe4e;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error message */
+        .error-message {
+            background-color: rgba(220, 38, 38, 0.2);
+            border: 1px solid #ef4444;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a2cb8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">Celestium <span class="beta-badge">BETA</span></div>
+                </div>
+                <nav>
+                    <a href="https://github.com/yourusername/celestium" target="_blank">GitHub</a>
+                    <a href="#">Docs</a>
+                    <a href="#" class="signup-btn">Sign Up</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Transform Text into <span class="highlight">Stunning Animations</span></h1>
+                <p>Describe what you want to see, and our AI will create beautiful animations for you in seconds.</p>
+            </section>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="create">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    Create Animation
+                </button>
+                <button class="tab-btn" data-tab="history">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Animation History
+                </button>
+            </div>
+
+            <div id="create-tab" class="tab-content">
+                <div class="form-container">
+                    <div id="error-message" class="error-message"></div>
+                    <form id="animation-form">
+                        <div class="form-group">
+                            <label for="prompt">Describe your animation</label>
+                            <textarea id="prompt" placeholder="E.g., A bouncing red ball that transforms into a cube, with a colorful explosion when it hits the ground" rows="4"></textarea>
+                        </div>
+                        <button type="submit" id="generate-btn" class="submit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            Generate Animation
+                        </button>
+                        <p class="note">Animations typically take 30-60 seconds to generate</p>
+                    </form>
+                </div>
+
+                <div class="examples">
+                    <h2>Example Prompts</h2>
+                    <div class="examples-grid">
+                        <div class="example-card" data-prompt="A planet orbiting a star with a small moon, showing day and night cycles">
+                            <h3>Cosmic Animation</h3>
+                            <p>A planet orbiting a star with a small moon, showing day and night cycles</p>
+                        </div>
+                        <div class="example-card" data-prompt="A growing tree that changes with the seasons, from spring to winter">
+                            <h3>Seasonal Tree</h3>
+                            <p>A growing tree that changes with the seasons, from spring to winter</p>
+                        </div>
+                        <div class="example-card" data-prompt="A mathematical visualization of the Fibonacci sequence with spirals">
+                            <h3>Mathematical Visualization</h3>
+                            <p>A mathematical visualization of the Fibonacci sequence with spirals</p>
+                        </div>
+                        <div class="example-card" data-prompt="A colorful DNA double helix that unwinds and shows the base pairs">
+                            <h3>DNA Animation</h3>
+                            <p>A colorful DNA double helix that unwinds and shows the base pairs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="history-tab" class="tab-content" style="display: none;">
+                <div class="history-container">
+                    <h2>Your Animations</h2>
+                    <div id="animations-container">
+                        <!-- Animation cards will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="video-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Animation Preview</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="video-container">
+                <video id="modal-video" controls></video>
+            </div>
+            <div class="modal-footer">
+                <a id="download-link" class="action-btn download-btn" download>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Animation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a2cb8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">Celestium</div>
+                </div>
+                <div class="copyright">&copy; 2023 Celestium. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const createTab = document.getElementById('create-tab');
+        const historyTab = document.getElementById('history-tab');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const animationForm = document.getElementById('animation-form');
+        const promptInput = document.getElementById('prompt');
+        const generateBtn = document.getElementById('generate-btn');
+        const errorMessage = document.getElementById('error-message');
+        const exampleCards = document.querySelectorAll('.example-card');
+        const animationsContainer = document.getElementById('animations-container');
+        const videoModal = document.getElementById('video-modal');
+        const modalVideo = document.getElementById('modal-video');
+        const downloadLink = document.getElementById('download-link');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // State
+        let isGenerating = false;
+        let currentJobId = null;
+        let pollingInterval = null;
+        let animations = [];
+
+        // Event Listeners
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const tabName = button.getAttribute('data-tab');
+                if (tabName === 'create') {
+                    createTab.style.display = 'block';
+                    historyTab.style.display = 'none';
+                } else {
+                    createTab.style.display = 'none';
+                    historyTab.style.display = 'block';
+                    fetchAnimations();
+                }
+            });
+        });
+
+        animationForm.addEventListener('submit', handleSubmit);
+
+        exampleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const prompt = card.getAttribute('data-prompt');
+                promptInput.value = prompt;
+                promptInput.focus();
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            videoModal.style.display = 'none';
+            modalVideo.pause();
+        });
+
+        // Functions
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const prompt = promptInput.value.trim();
+            
+            if (!prompt) {
+                showError('Please enter a prompt for your animation');
+                return;
+            }
+            
+            if (isGenerating) {
+                return;
+            }
+            
+            hideError();
+            setGenerating(true);
+            
+            try {
+                const response = await fetch('/api/animations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to create animation');
+                }
+                
+                const data = await response.json();
+                currentJobId = data.job_id;
+                
+                // Switch to history tab
+                tabButtons[1].click();
+                
+                // Clear the prompt
+                promptInput.value = '';
+                
+                // Start polling for job status
+                startPolling(currentJobId);
+                
+            } catch (err) {
+                console.error('Error creating animation:', err);
+                showError('Failed to create animation. Please try again later.');
+                setGenerating(false);
+            }
+        }
+
+        function setGenerating(generating) {
+            isGenerating = generating;
+            
+            if (generating) {
+                generateBtn.innerHTML = `
+                    <span class="loader"></span>
+                    Generating...
+                `;
+                generateBtn.disabled = true;
+            } else {
+                generateBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    Generate Animation
+                `;
+                generateBtn.disabled = false;
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        function startPolling(jobId) {
+            // Clear any existing polling
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            // Poll every 2 seconds
+            pollingInterval = setInterval(() => {
+                checkJobStatus(jobId);
+            }, 2000);
+        }
+
+        async function checkJobStatus(jobId) {
+            try {
+                const response = await fetch(`/api/animations/${jobId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to check job status');
+                }
+                
+                const data = await response.json();
+                
+                // If job is completed or failed, stop polling and refresh animations
+                if (data.status === 'completed' || data.status === 'failed') {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                    setGenerating(false);
+                    currentJobId = null;
+                    fetchAnimations();
+                }
+                
+            } catch (err) {
+                console.error('Error checking job status:', err);
+            }
+        }
+
+        async function fetchAnimations() {
+            try {
+                const response = await fetch('/api/history');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch animations');
+                }
+                
+                const data = await response.json();
+                animations = data;
+                renderAnimations();
+                
+            } catch (err) {
+                console.error('Error fetching animations:', err);
+                animationsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <p>Failed to load animations. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderAnimations() {
+            if (animations.length === 0) {
+                animationsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎬</div>
+                        <p>You haven't created any animations yet</p>
+                        <button class="create-btn" id="create-first-btn">Create Your First Animation</button>
+                    </div>
+                `;
+                
+                document.getElementById('create-first-btn').addEventListener('click', () => {
+                    tabButtons[0].click();
+                });
+                
+                return;
+            }
+            
+            let html = '<div class="animations-grid">';
+            
+            animations.forEach(animation => {
+                const statusClass = getStatusClass(animation.status);
+                const statusText = getStatusText(animation.status);
+                const date = formatDate(animation.created_at);
+                
+                html += `
+                    <div class="animation-card">
+                        <div class="animation-header">
+                            <div class="status">
+                                <div class="status-dot ${statusClass}"></div>
+                                <span>${statusText}</span>
+                            </div>
+                            <div class="date">${date}</div>
+                        </div>
+                        <div class="animation-body">
+                            <h3 class="animation-title">${animation.prompt}</h3>
+                            ${renderAnimationActions(animation)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            animationsContainer.innerHTML = html;
+            
+            // Add event listeners to play buttons
+            document.querySelectorAll('.play-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const jobId = button.getAttribute('data-id');
+                    openVideoModal(jobId);
+                });
+            });
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'completed': return 'completed';
+                case 'queued': return 'queued';
+                case 'generating_code': return 'generating';
+                case 'running_code': return 'running';
+                case 'failed': return 'failed';
+                default: return '';
+            }
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'completed': return 'Completed';
+                case 'queued': return 'Queued';
+                case 'generating_code': return 'Generating Code';
+                case 'running_code': return 'Creating Animation';
+                case 'failed': return 'Failed';
+                default: return 'Unknown';
+            }
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString();
+        }
+
+        function renderAnimationActions(animation) {
+            if (animation.status === 'completed') {
+                return `
+                    <div class="animation-actions">
+                        <button class="action-btn play-btn" data-id="${animation.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Play
+                        </button>
+                        <a href="/api/animations/${animation.id}/video" download="animation-${animation.id}.mp4" class="action-btn download-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download
+                        </a>
+                    </div>
+                `;
+            } else {
+                let statusMessage = '';
+                
+                switch (animation.status) {
+                    case 'queued':
+                        statusMessage = 'Waiting in queue...';
+                        break;
+                    case 'generating_code':
+                        statusMessage = 'Generating animation code...';
+                        break;
+                    case 'running_code':
+                        statusMessage = 'Creating animation...';
+                        break;
+                    case 'failed':
+                        statusMessage = 'Generation failed';
+                        break;
+                    default:
+                        statusMessage = 'Processing...';
+                }
+                
+                return `
+                    <div class="status-message">
+                        ${animation.status !== 'failed' ? '<span class="loader"></span>' : ''}
+                        ${statusMessage}
+                    </div>
+                `;
+            }
+        }
+
+        function openVideoModal(jobId) {
+            // Set the video source
+            modalVideo.src = `/api/animations/${jobId}/video`;
+            
+            // Set the download link
+            downloadLink.href = `/api/animations/${jobId}/video`;
+            downloadLink.download = `animation-${jobId}.mp4`;
+            
+            // Show the modal
+            videoModal.style.display = 'flex';
+            
+            // Play the video
+            modalVideo.play();
+        }
+
+        // Initialize by showing some mock animations if in development mode
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // Mock data for development testing
+            animations = [
+                {
+                    id: 'mock1',
+                    prompt: 'A bouncing red ball that transforms into a cube',
+                    status: 'completed',
+                    created_at: Math.floor(Date.now() / 1000) - 3600
+                },
+                {
+                    id: 'mock2',
+                    prompt: 'A planet orbiting a star with a small moon',
+                    status: 'generating_code',
+                    created_at: Math.floor(Date.now() / 1000) - 1800
+                },
+                {
+                    id: 'mock3',
+                    prompt: 'A growing tree that changes with the seasons',
+                    status: 'queued',
+                    created_at: Math.floor(Date.now() / 1000) - 900
+                }
+            ];
+            
+            // For demo purposes, show a mock video when Play is clicked
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.play-btn')) {
+                    e.preventDefault();
+                    
+                    // Use a placeholder video URL for the demo
+                    const placeholderVideo = 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+                    
+                    // Open modal with placeholder
+                    modalVideo.src = placeholderVideo;
+                    downloadLink.href = placeholderVideo;
+                    videoModal.style.display = 'flex';
+                }
+            }, false);
+        }
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.style.display = 'none';
+                modalVideo.pause();
+            }
+        });
+
+        // Initialize the page
+        renderAnimations();
+    </script>
+</body>
+</html>
