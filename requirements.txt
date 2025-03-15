@@ -1,0 +1,10 @@
+flask
+flask-cors
+python-dotenv
+together
+manim
+Pillow
+numpy
+imageio
+requests
+beautifulsoup4
