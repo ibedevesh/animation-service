@@ -1,0 +1,13 @@
+{
+    "name": "Animation Service",
+    "dockerFile": "Dockerfile",
+    "forwardPorts": [10000],
+    "postCreateCommand": "pip install -r requirements.txt",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python"
+            ]
+        }
+    }
+}
